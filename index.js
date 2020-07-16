@@ -174,11 +174,26 @@ module.exports = app => {
     // `context` extracts information from the event, which can be passed to
     // GitHub API calls. This will return:
     //   { owner: 'yourname', repo: 'yourrepo', number: 123, body: 'Hello World !}
-    const params = context.issue({ body: 'Hello World!' })
+    const { body } = context.payload.issue;
+    const params = context.issue({ body: body.includes('Test') ? 'You just wrote Test' : 'Random Bot Comment'})
 
     // Post a comment on the issue
     return context.github.issues.createComment(params)
   })
+
+  app.on(['issues.opened', 'issues.edited'], async context => {
+    // An issue was opened or edited, what should we do with it?
+    app.log(context)
+    
+    const params = context.issue({ body: 'You have edited the Issue'})
+    return context.github.issues.createComment(params)
+  })
+
+  app.on('push', async context => {
+    // Code was pushed to the repo, what should we do with it?
+    app.log(context)
+  })
+  
 
   // we don't care about marketplace events
   app.on('marketplace_purchase', async context => {
