@@ -1,54 +1,50 @@
 {
-  "name": "sniffy",
-  "version": "1.0.0",
-  "private": true,
-  "description": "An app to sniff the size of PRs as well as attach labels depending on area the PR is submitted",
-  "author": "Sayan Mondal <sayan.mondal@mayadata.io>",
-  "license": "ISC",
-  "repository": "https://github.com/S-ayanide/sniffy.git",
-  "homepage": "https://github.com/S-ayanide/sniffy",
-  "bugs": "https://github.com/S-ayanide/sniffy/issues",
+  "name": "size",
+  "version": "1.1.0",
+  "description": "Applies size labels to Pull Requests",
+  "author": "Benji Visser <benny@noqcks.io>",
+  "license": "MIT",
+  "repository": "https://github.com/noqcks/size.git",
+  "homepage": "https://github.com/noqcks/size",
+  "bugs": "https://github.com/noqcks/size/issues",
   "keywords": [
     "probot",
     "github",
     "probot-app"
   ],
   "scripts": {
-    "build": "tsc",
-    "build:watch": "tsc && (tsc -w --preserveWatchOutput & nodemon)",
-    "dev": "npm run build:watch",
-    "start": "probot run ./lib/index.js",
-    "lint": "standard **/*.ts --fix",
-    "test": "jest && standard **/*.ts",
+    "dev": "nodemon",
+    "start": "probot run ./index.js",
+    "lint": "standard --fix",
+    "test": "jest ",
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
   },
   "dependencies": {
-    "probot": "^9.5.3"
+    "@sentry/node": "^4.3.0",
+    "probot": "^7.5.3",
+    "@noqcks/generated": "^1.0.0",
+    "minimatch": "^3.0.4"
   },
   "devDependencies": {
-    "@types/jest": "^25.1.0",
-    "@types/nock": "^11.1.0",
-    "@types/node": "^13.1.0",
-    "@typescript-eslint/parser": "^2.4.0",
-    "eslint-plugin-typescript": "^0.14.0",
-    "jest": "^24.9.0",
-    "nock": "^12.0.0",
-    "nodemon": "^2.0.0",
-    "smee-client": "^1.1.0",
-    "standard": "^14.3.1",
-    "ts-jest": "^25.1.0",
-    "typescript": "^3.6.4"
+    "jest": "^24.1.0",
+    "nock": "^10.0.0",
+    "nodemon": "^1.18.7",
+    "smee-client": "^1.0.2",
+    "standard": "^10.0.3"
   },
   "engines": {
     "node": ">= 8.3.0"
   },
   "standard": {
-    "parser": "@typescript-eslint/parser",
     "env": [
       "jest"
-    ],
-    "plugins": [
-      "typescript"
+    ]
+  },
+  "nodemonConfig": {
+    "exec": "npm start",
+    "watch": [
+      ".env",
+      "."
     ]
   },
   "jest": {
