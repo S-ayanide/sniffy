@@ -52,7 +52,6 @@ function sizeLabel (lineCount) {
   return label.XXL
 }
 
-
 /**
  * getCustomGeneratedFiles will grab a list of file globs that determine
  * generated files from the repos .gitattributes.
@@ -119,13 +118,16 @@ async function ensureLabelExists (context, name, color) {
   }
 }
 
-
-
 /**
  * This is the main event loop that runs when a revelent Pull Request
  * action is triggered.
  */
 module.exports = app => {
+
+  app.on('pull_request', async context => {
+    console.log('Inside')
+  })
+
   app.on([
     'pull_request.opened',
     'pull_request.reopened',
