@@ -18,7 +18,8 @@ const colors = {
   'size/M': '7F7203',
   'size/L': 'A14C05',
   'size/XL': 'C32607',
-  'size/XXL': 'E50009'
+  'size/XXL': 'E50009',
+  'area/litmus-portal': 'ADD6FF'
 }
 
 const sizes = {
@@ -130,6 +131,8 @@ module.exports = app => {
     'pull_request.edited'], async context => {
 
     const pullRequest = context.payload.pull_request;
+    const {title} = pullRequest;
+
     const {owner: {login: owner}, name: repo} = pullRequest.base.repo;
     const {number} = pullRequest;
     let {additions, deletions} = pullRequest;
@@ -163,6 +166,11 @@ module.exports = app => {
       }
     })
 
+    if(title.includes('litmus-portal')) {
+      labelToAdd = 'area/litmus-portal'
+      await addLabel(context, labelToAdd, colors[labelToAdd])
+    }
+    
     // assign GitHub label
     return await addLabel(context, labelToAdd, colors[labelToAdd])
   })
