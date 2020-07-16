@@ -14,7 +14,6 @@
 # Uncomment the event names below to enable them.
 default_events:
 - pull_request
-- issues
 
 
 # The set of permissions needed by the GitHub App. The format of the object uses
@@ -22,11 +21,6 @@ default_events:
 # the value (for example, write).
 # Valid values are `read`, `write`, and `none`
 default_permissions:
-
-  # Issues and related comments, assignees, labels, and milestones.
-  # https://developer.github.com/v3/apps/permissions/#permission-on-issues
-  issues: write
-
   # Pull requests and related comments, assignees, labels, milestones, and merges.
   # https://developer.github.com/v3/apps/permissions/#permission-on-pull-requests
   pull_requests: write

@@ -1,12 +1,12 @@
 {
-  "name": "size",
+  "name": "Sniffy",
   "version": "1.1.0",
   "description": "Applies size labels to Pull Requests",
   "author": "Benji Visser <benny@noqcks.io>",
   "license": "MIT",
-  "repository": "https://github.com/noqcks/size.git",
-  "homepage": "https://github.com/noqcks/size",
-  "bugs": "https://github.com/noqcks/size/issues",
+  "repository": "https://github.com/S-ayanide/sniffy",
+  "homepage": "https://github.com/S-ayanide/sniffy",
+  "bugs": "https://github.com/S-ayanide/sniffy/issues",
   "keywords": [
     "probot",
     "github",
