@@ -52,7 +52,6 @@ function sizeLabel (lineCount) {
   return label.XXL
 }
 
-
 /**
  * getCustomGeneratedFiles will grab a list of file globs that determine
  * generated files from the repos .gitattributes.
@@ -81,7 +80,6 @@ async function getCustomGeneratedFiles (context, owner, repo) {
   })
   return files
 }
-
 
 /**
  * globMatch compares file name with file blobs to
@@ -119,13 +117,12 @@ async function ensureLabelExists (context, name, color) {
   }
 }
 
-
-
 /**
  * This is the main event loop that runs when a revelent Pull Request
  * action is triggered.
  */
 module.exports = app => {
+
   app.on([
     'pull_request.opened',
     'pull_request.reopened',
@@ -168,16 +165,6 @@ module.exports = app => {
 
     // assign GitHub label
     return await addLabel(context, labelToAdd, colors[labelToAdd])
-  })
-
-  app.on('issues.opened', async context => {
-    // `context` extracts information from the event, which can be passed to
-    // GitHub API calls. This will return:
-    //   { owner: 'yourname', repo: 'yourrepo', number: 123, body: 'Hello World !}
-    const params = context.issue({ body: 'Hello World!' })
-
-    // Post a comment on the issue
-    return context.github.issues.createComment(params)
   })
 
   // we don't care about marketplace events
