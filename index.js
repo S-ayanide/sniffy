@@ -1,102 +1,9 @@
 const Sentry = require('@sentry/node');
 Sentry.init({ dsn: process.env.SENTRY_DSN });
 const generated = require('@noqcks/generated');
-const minimatch = require("minimatch")
-
-const label = {
-  XS: 'size/XS',
-  S: 'size/S',
-  M: 'size/M',
-  L: 'size/L',
-  XL: 'size/XL',
-  XXL: 'size/XXL'
-}
-
-const colors = {
-  'size/XS': '3CBF00',
-  'size/S': '5D9801',
-  'size/M': '7F7203',
-  'size/L': 'A14C05',
-  'size/XL': 'C32607',
-  'size/XXL': 'E50009',
-  'area/litmus-portal': 'ADD6FF'
-}
-
-const sizes = {
-  S: 10,
-  M: 30,
-  L: 100,
-  Xl: 500,
-  Xxl: 1000
-}
-
-
-/**
- * sizeLabel will return a string label that can be assigned to a
- * GitHub Pull Request. The label is determined by the lines of code
- * in the Pull Request.
- * @param lineCount The number of lines in the Pull Request.
- */
-function sizeLabel (lineCount) {
-  if (lineCount < sizes.S) {
-    return label.XS
-  } else if (lineCount < sizes.M) {
-    return label.S
-  } else if (lineCount < sizes.L) {
-    return label.M
-  } else if (lineCount < sizes.Xl) {
-    return label.L
-  } else if (lineCount < sizes.Xxl) {
-    return label.XL
-  }
-
-  return label.XXL
-}
-
-/**
- * getCustomGeneratedFiles will grab a list of file globs that determine
- * generated files from the repos .gitattributes.
- * @param context The context of the PullRequest.
- * @param owner The owner of the repository.
- * @param repo The repository where the .gitattributes file is located.
- */
-async function getCustomGeneratedFiles (context, owner, repo) {
-  let files = []
-  const path = ".gitattributes"
-
-  let response;
-  try {
-    response = await context.github.repos.getContents({owner, repo, path})
-  } catch (e) {
-    return files
-  }
-
-  const buff = new Buffer(response.data.content, 'base64')
-  const lines = buff.toString('ascii').split("\n")
-
-  lines.forEach(function(item) {
-    if (item.includes("linguist-generated=true")) {
-      files.push(item.split(" ")[0])
-    }
-  })
-  return files
-}
-
-/**
- * globMatch compares file name with file blobs to
- * see if a file is matched by a file glob expression.
- * @param file The file to compare.
- * @param globs A list of file globs to match the file.
- */
-function globMatch (file, globs) {
-  for (i=0; i < globs.length; i++) {
-    if (minimatch(file, globs[i])) {
-      return true
-      break;
-    }
-  }
-  return false
-}
+const PR = require('./lib/pull_request');
+const Config = require('./config/config');
+const Issue = require('./lib/issues');
 
 async function addLabel (context, name, color) {
   const params = Object.assign({}, context.issue(), {labels: [name]})
@@ -138,7 +45,7 @@ module.exports = app => {
     let {additions, deletions} = pullRequest;
 
     // get list of custom generated files as defined in .gitattributes
-    const customGeneratedFiles = await getCustomGeneratedFiles(context, owner, repo)
+    const customGeneratedFiles = await PR.getCustomGeneratedFiles(context, owner, repo)
 
     // list of files modified in the pull request
     const res = await context.github.pullRequests.listFiles({owner, repo, number})
@@ -146,18 +53,19 @@ module.exports = app => {
     // if files are generated, remove them from the additions/deletions total
     res.data.forEach(function(item) {
       var g = new generated(item.filename, item.patch)
-      if (globMatch(item.filename, customGeneratedFiles) || g.isGenerated()) {
+      if (PR.globMatch(item.filename, customGeneratedFiles) || g.isGenerated()) {
         additions -= item.additions
         deletions -= item.deletions
       }
     })
 
     // calculate GitHub label
-    var labelToAdd = sizeLabel(additions + deletions)
+    var labelToAdd = PR.sizeLabel(additions + deletions)
+    console.log(labelToAdd)
 
     // remove existing size/<size> label if it exists and is not labelToAdd
     pullRequest.labels.forEach(function(prLabel) {
-      if(Object.values(label).includes(prLabel.name)) {
+      if(Object.values(Config.label).includes(prLabel.name)) {
         if (prLabel.name != labelToAdd) {
           context.github.issues.removeLabel(context.issue({
             name: prLabel.name
@@ -167,12 +75,25 @@ module.exports = app => {
     })
 
     if(title.includes('litmus-portal')) {
-      labelToAdd = 'area/litmus-portal'
-      await addLabel(context, labelToAdd, colors[labelToAdd])
+      await addLabel(context, 'area/litmus-portal', Config.colors[labelToAdd])
+      await addLabel(context, labelToAdd, Config.colors[labelToAdd])
     }
     
     // assign GitHub label
-    return await addLabel(context, labelToAdd, colors[labelToAdd])
+    return await addLabel(context, labelToAdd, Config.colors[labelToAdd])
+  })
+
+  // Issue Creation
+  app.on('issues.opened', async context => {
+
+    const { body } = context.payload.issue;
+
+    // create a comment
+    const comment = context.issue({
+      body: body.includes("Thanks") ? "You are Welcome!" : "Thanks for creating an issue!",
+    });
+    // publish it
+    return context.github.issues.createComment(comment);
   })
 
   // we don't care about marketplace events
