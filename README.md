@@ -1,8 +1,6 @@
-# Pull Request Size
+# Sniffy
 
-[![Build Status](https://travis-ci.org/noqcks/pull-request-size.svg?branch=master)](https://travis-ci.org/noqcks/pull-request-size) | [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-Pull Request Size is a GitHub App that applies `size/*` labels to Pull Requests based on the total lines of code changed (additions and deletions).
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 <img width="767" alt="screen shot 2018-11-01 at 10 42 27 am" src="https://user-images.githubusercontent.com/4740147/47858607-d7e05f80-ddc2-11e8-97d9-247033cc9a12.png">
 
@@ -19,7 +17,7 @@ Configure Pull Request Size for your organization on the [GitHub app page](https
 | <a id="size/XL" href="#size/XL">`size/XL`</a> | Denotes a PR that changes 500-999 lines. |
 | <a id="size/XXL" href="#size/XXL">`size/XXL`</a> | Denotes a PR that changes 1000+ lines. |
 
-Pull Request Size calculates the size of a PR as
+Sniffy calculates the size of a PR as
 
 ```
 total additions + total deletions - (all generated¹ file additions/deletions)
@@ -44,6 +42,3 @@ npm start
 ## License
 
 [MIT](LICENSE) © 2018 Benji Visser <benny@noqcks.io>
-
-## TODO
-
