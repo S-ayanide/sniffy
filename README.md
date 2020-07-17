@@ -2,10 +2,6 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-<img width="767" alt="screen shot 2018-11-01 at 10 42 27 am" src="https://user-images.githubusercontent.com/4740147/47858607-d7e05f80-ddc2-11e8-97d9-247033cc9a12.png">
-
-Configure Pull Request Size for your organization on the [GitHub app page](https://github.com/apps/pull-request-size).
-
 ## Sizing
 
 | Name | Description |
