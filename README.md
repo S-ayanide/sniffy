@@ -24,7 +24,7 @@ total additions + total deletions - (all generated¹ file additions/deletions)
 ## Setup
 
 This GitHub app runs on probot. It makes it very easy to create new GitHub apps.
-If you want to run or develop pull-request-size just follow the commands
+If you want to run or develop Sniffy just follow the commands
 below. hit localhost:3000, and follow the probot instructions.
 
 ```sh
