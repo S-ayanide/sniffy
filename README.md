@@ -37,4 +37,4 @@ npm start
 
 ## License
 
-[MIT](LICENSE) © 2018 Benji Visser <benny@noqcks.io>
+[MIT](LICENSE) © 2020 Sayan Mondal <sayan.mondal@mayadata.io>
