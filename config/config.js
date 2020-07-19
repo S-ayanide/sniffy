@@ -14,7 +14,8 @@ const label = {
     'size/L': 'A14C05',
     'size/XL': 'C32607',
     'size/XXL': 'E50009',
-    'area/litmus-portal': 'ADD6FF'
+    'area/litmus-portal': 'ADD6FF',
+    'DO NOT MERGE': '3D9999'
   }
   
   const sizes = {

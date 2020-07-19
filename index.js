@@ -4,26 +4,8 @@ const generated = require('@noqcks/generated');
 const PR = require('./lib/pull_request');
 const Config = require('./config/config');
 const Issue = require('./lib/issues');
-
-async function addLabel (context, name, color) {
-  const params = Object.assign({}, context.issue(), {labels: [name]})
-
-  await ensureLabelExists(context, name, color)
-  await context.github.issues.addLabels(params)
-}
-
-async function ensureLabelExists (context, name, color) {
-  try {
-    return await context.github.issues.getLabel(context.repo({
-      name: name
-    }))
-  } catch (e) {
-    return context.github.issues.createLabel(context.repo({
-      name: name,
-      color: color
-    }))
-  }
-}
+const selectiveFileChecker = require('./lib/selectiveModifiedFileChecker');
+const AddLabel = require('./lib/addLabels');
 
 /**
  * This is the main event loop that runs when a revelent Pull Request
@@ -59,6 +41,9 @@ module.exports = app => {
       }
     })
 
+    // Selective File Checker
+    selectiveFileChecker.selectiveModifiedFileChecker(res, context);
+
     // calculate GitHub label
     var labelToAdd = PR.sizeLabel(additions + deletions)
     console.log(labelToAdd)
@@ -75,26 +60,22 @@ module.exports = app => {
     })
 
     if(title.includes('litmus-portal')) {
-      await addLabel(context, 'area/litmus-portal', Config.colors[labelToAdd])
-      await addLabel(context, labelToAdd, Config.colors[labelToAdd])
+      await AddLabel.addLabel(context, 'area/litmus-portal', Config.colors['area/litmus-portal'])
+      await AddLabel.addLabel(context, labelToAdd, Config.colors[labelToAdd])
+    }
+
+    const doNotMerge = 'DO NOT MERGE'
+
+    if(labelToAdd === 'size/XXL'){
+      await AddLabel.addLabel(context, doNotMerge, Config.colors[doNotMerge]);
     }
     
     // assign GitHub label
-    return await addLabel(context, labelToAdd, Config.colors[labelToAdd])
+    return await AddLabel.addLabel(context, labelToAdd, Config.colors[labelToAdd])
   })
 
-  // Issue Creation
-  app.on('issues.opened', async context => {
-
-    const { body } = context.payload.issue;
-
-    // create a comment
-    const comment = context.issue({
-      body: body.includes("Thanks") ? "You are Welcome!" : "Thanks for creating an issue!",
-    });
-    // publish it
-    return context.github.issues.createComment(comment);
-  })
+  // Litmus on Issues
+  Issue.issueOpened(app)
 
   // we don't care about marketplace events
   app.on('marketplace_purchase', async context => {
