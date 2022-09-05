@@ -2,6 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+Sniffy is wise and caring and would always be there to ease your task and take the workload off your shoulders. He would sniff the size of PRs and let you know automatically as well as attach any labels depending on area the PR is submitted.
+
 ## Sizing
 
 | Name | Description |
@@ -37,4 +39,4 @@ npm start
 
 ## License
 
-[MIT](LICENSE) © 2020 Sayan Mondal <sayan.mondal@mayadata.io>
+[MIT](LICENSE) © 2020 Sayan Mondal <sayan.mondal@harness.io>
