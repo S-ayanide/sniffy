@@ -1,3 +1,5 @@
+<img src="https://user-images.githubusercontent.com/34975209/188411945-0b9c7e6a-9225-4cc9-9da3-8444102e0237.jpeg" width="100" />
+
 # Sniffy
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
